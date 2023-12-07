@@ -1,0 +1,74 @@
+import React, { useState } from 'react';
+
+let TodoApp = () => {
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState('');
+  const [toggleItem, setToggleItem] = useState(true);
+  const [editedTask, setEditedTask] = useState('');
+
+  const addTask = () => {
+    if (newTask.trim() !== '') {
+      setTasks([...tasks, newTask]);
+      setNewTask('');
+    }
+  };
+
+  const removeTask = (index) => {
+    const updatedTasks = [...tasks];
+    updatedTasks.splice(index, 1);
+    setTasks(updatedTasks);
+  };
+
+  const updateTask = (index) => {
+    setEditedTask(tasks[index]);
+    setToggleItem(false);
+  };
+
+  const saveEditedTask = (index) => {
+    const updatedTasks = [...tasks];
+    updatedTasks[index] = editedTask;
+    setTasks(updatedTasks);
+    setToggleItem(true);
+    setEditedTask(''); // Reset the editedTask state after saving
+  };
+
+  return (
+    <div>
+      <h1>Todo List APP</h1>
+      <div>
+        <input
+          type="text"
+          placeholder="enter todo list name"
+          value={newTask}
+          onChange={(e) => setNewTask(e.target.value)}
+        />
+        <button onClick={addTask}>Add Task</button>
+      </div>
+
+      <ul>
+        {tasks.map((task, index) => (
+          <li key={index}>
+            {toggleItem ? (
+              <span>{task}</span>
+            ) : (
+              <input
+                type="text"
+                value={editedTask}
+                onChange={(e) => setEditedTask(e.target.value)}
+              />
+            )}
+            <button onClick={() => removeTask(index)}>Remove</button>
+            {toggleItem ? (
+              <button onClick={() => updateTask(index)}>Update</button>
+            ) : (
+              <button onClick={() => saveEditedTask(index)}>Save</button>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default TodoApp;
+
